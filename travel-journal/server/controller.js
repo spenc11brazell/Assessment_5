@@ -14,6 +14,37 @@ const sequelize = new Sequelize(CONNECTION_STRING,
 
 
 module.exports = {
+
+    getCountries: (req, res) => {
+        sequelize.query(`SELECT * FROM cc_countries c;`)
+            .then(dbRes => res.status(200).send(dbRes[0]))
+            .catch(err => console.log(err))
+    },
+
+    createCities: (req, res) => {
+        sequelize.query(`Insert into cc_cities (name,  rating, country_id)
+        values (${countryId});`)
+            .then(dbRes => res.status(200).send(dbRes[0]))
+            .catch(err => console.log(err))
+    },
+
+    getCities: (req, res) => {
+        sequelize.query(`select u.city_id, u.name, u.rating, c.country_id, c.name
+        from cc_cities u and cc_countries c
+        join cc_cities u and cc_countries c = c.country_id;`)
+            .then(dbRes => res.status(200).send(dbRes[0]))
+            .catch(err => console.log(err))
+    },
+
+    deleteCities: (req, res) => {
+        sequelize.query(`slect u.city_id
+        delete from cc_cities u`)
+            .then(dbRes => res.status(200).send(dbRes[0]))
+            .catch(err => console.log(err))
+    },
+
+
+
     seed: (req, res) => {
         sequelize.query(`
             drop table if exists cities;
@@ -30,6 +61,7 @@ module.exports = {
                 rating int,
                 country_id int references countries(country_id)
             );
+
 
             insert into countries (name)
             values ('Afghanistan'),
